@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPCC Uniform Tracker - Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="UniformAdminDashboard.css">
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap logo-icon"></i>
+                    <span>SPCC</span><span>Uniforms</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="Uniform.html"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="adminpage.html"><i class="fas fa-arrow-left"></i> Back</a></li>
+                        <li><a href="#"><i class="fas fa-user-shield"></i> Admin</a></li>
+                        <li><a href="page1.html"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <section class="admin-content">
+        <div class="container">
+            <div class="admin-header">
+                <h1 class="admin-title">Uniform Management</h1>
+                <button class="btn btn-success" id="addUniformBtn">
+                    <i class="fas fa-plus"></i> Add New Uniform
+                </button>
+            </div>
+            
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Grade</th>
+                        <th>Gender</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="uniformsTableBody">
+                    <!-- Uniforms will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+    
+    <!-- Add/Edit Uniform Modal -->
+    <div class="modal" id="uniformModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Uniform</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="uniformForm">
+                <input type="hidden" id="uniformId">
+                
+                <div class="form-group">
+                    <label for="uniformTitle">Title</label>
+                    <input type="text" id="uniformTitle" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="uniformDescription">Description</label>
+                    <textarea id="uniformDescription" class="form-control" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="uniformGrade">Grade Level</label>
+                    <select id="uniformGrade" class="form-control form-select" required>
+                        <option value="">Select Grade Level</option>
+                        <option value="kinder">Kindergarten</option>
+                        <option value="grade1">Grade School</option>
+                        <option value="grade7">Junior High School</option>
+                        <option value="grade11">Senior High</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="uniformGender">Gender</label>
+                    <select id="uniformGender" class="form-control form-select" required>
+                        <option value="">Select Gender</option>
+                        <option value="boys">Boys</option>
+                        <option value="girls">Girls</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="uniformCategory">Category</label>
+                    <select id="uniformCategory" class="form-control form-select" required>
+                        <option value="">Select Category</option>
+                        <option value="uniform">School Uniform</option>
+                        <option value="pe">PE Attire</option>
+                        <option value="activity">Activity Shirt</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="uniformImage">Image URL</label>
+                    <input type="url" id="uniformImage" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Base Price</label>
+                    <input type="number" id="uniformPrice" class="form-control" min="0" step="10" required>
+                </div>
+                
+                <div class="form-group size-management">
+                    <label>Sizes & Prices</label>
+                    <div id="sizeContainer">
+                        <!-- Size inputs will be added here -->
+                    </div>
+                    <button type="button" class="add-size-btn" id="addSizeBtn">
+                        <i class="fas fa-plus"></i> Add Size Option
+                    </button>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-success" id="saveBtn">Save Uniform</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirm Deletion</h3>
+                <button class="close-modal" id="closeDeleteModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this uniform? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancelDeleteBtn">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+
+        
+        // Sample data - in a real app, this would come from a database
+const UNIFORMS_DATA = {
+            kinder: {
+                boys: {
+                    uniform: [
+                        { 
+                            id: "kinder-boys-uniform-shirt", 
+                            title: "Kindergarten Boys Uniform Shirt", 
+                            image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 450, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 20-22 inches", price: 450 },
+                                { label: "Medium", dimensions: "Waist: 22-24 inches", price: 480 },
+                                { label: "Large", dimensions: "Waist: 24-26 inches", price: 500 }
+                            ],
+                            description: "Boys uniform shirt with school logo"
+                        },
+                        { 
+                            id: "kinder-boys-uniform-pants", 
+                            title: "Kindergarten Boys Uniform Pants", 
+                            image: "https://images.unsplash.com/photo-1598522325074-042db73fd47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 400, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 20-22 inches", price: 400 },
+                                { label: "Medium", dimensions: "Waist: 22-24 inches", price: 420 },
+                                { label: "Large", dimensions: "Waist: 24-26 inches", price: 440 }
+                            ],
+                            description: "Boys uniform pants"
+                        }
+                    ],
+                    pe: [
+                        { 
+                            id: "kinder-boys-pe-shirt", 
+                            title: "Kindergarten Boys PE Shirt", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 300, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 20-22 inches", price: 300 },
+                                { label: "Medium", dimensions: "Chest: 22-24 inches", price: 320 },
+                                { label: "Large", dimensions: "Chest: 24-26 inches", price: 340 }
+                            ],
+                            description: "Boys PE shirt"
+                        },
+                        { 
+                            id: "kinder-boys-pe-shorts", 
+                            title: "Kindergarten Boys PE Shorts", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 250, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 20-22 inches", price: 250 },
+                                { label: "Medium", dimensions: "Waist: 22-24 inches", price: 270 },
+                                { label: "Large", dimensions: "Waist: 24-26 inches", price: 290 }
+                            ],
+                            description: "Boys PE shorts"
+                        }
+                    ],
+                    activity: [
+                        { 
+                            id: "kinder-boys-activity-shirt", 
+                            title: "Kindergarten Boys Activity Shirt", 
+                            image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 350, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 20-22 inches", price: 350 },
+                                { label: "Medium", dimensions: "Chest: 22-24 inches", price: 380 },
+                                { label: "Large", dimensions: "Chest: 24-26 inches", price: 400 }
+                            ],
+                            description: "Boys activity shirt"
+                        }
+                    ]
+                },
+                girls: {
+                    uniform: [
+                        { 
+                            id: "kinder-girls-uniform-blouse", 
+                            title: "Kindergarten Girls Uniform Blouse", 
+                            image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 450, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 20-22 inches", price: 450 },
+                                { label: "Medium", dimensions: "Waist: 22-24 inches", price: 480 },
+                                { label: "Large", dimensions: "Waist: 24-26 inches", price: 500 }
+                            ],
+                            description: "Girls uniform blouse with school logo"
+                        },
+                        { 
+                            id: "kinder-girls-uniform-skirt", 
+                            title: "Kindergarten Girls Uniform Skirt", 
+                            image: "https://images.unsplash.com/photo-1598522325074-042db73fd47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 400, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 20-22 inches", price: 400 },
+                                { label: "Medium", dimensions: "Waist: 22-24 inches", price: 420 },
+                                { label: "Large", dimensions: "Waist: 24-26 inches", price: 440 }
+                            ],
+                            description: "Girls uniform skirt"
+                        }
+                    ],
+                    pe: [
+                        { 
+                            id: "kinder-girls-pe-shirt", 
+                            title: "Kindergarten Girls PE Shirt", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 300, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 20-22 inches", price: 300 },
+                                { label: "Medium", dimensions: "Chest: 22-24 inches", price: 320 },
+                                { label: "Large", dimensions: "Chest: 24-26 inches", price: 340 }
+                            ],
+                            description: "Girls PE shirt"
+                        },
+                        { 
+                            id: "kinder-girls-pe-shorts", 
+                            title: "Kindergarten Girls PE Shorts", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 250, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 20-22 inches", price: 250 },
+                                { label: "Medium", dimensions: "Waist: 22-24 inches", price: 270 },
+                                { label: "Large", dimensions: "Waist: 24-26 inches", price: 290 }
+                            ],
+                            description: "Girls PE shorts"
+                        }
+                    ],
+                    activity: [
+                        { 
+                            id: "kinder-girls-activity-shirt", 
+                            title: "Kindergarten Girls Activity Shirt", 
+                            image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 350, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 20-22 inches", price: 350 },
+                                { label: "Medium", dimensions: "Chest: 22-24 inches", price: 380 },
+                                { label: "Large", dimensions: "Chest: 24-26 inches", price: 400 }
+                            ],
+                            description: "Girls activity shirt"
+                        }
+                    ]
+                }
+            },
+            grade1: {
+                boys: {
+                    uniform: [
+                        { 
+                            id: "grade1-boys-uniform-shirt", 
+                            title: "Grade School Boys Uniform Shirt", 
+                            image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 500, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 22-24 inches", price: 500 },
+                                { label: "Medium", dimensions: "Waist: 24-26 inches", price: 530 },
+                                { label: "Large", dimensions: "Waist: 26-28 inches", price: 550 }
+                            ],
+                            description: "Boys uniform shirt with school logo"
+                        },
+                        { 
+                            id: "grade1-boys-uniform-pants", 
+                            title: "Grade School Boys Uniform Pants", 
+                            image: "https://images.unsplash.com/photo-1598522325074-042db73fd47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 450, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 22-24 inches", price: 450 },
+                                { label: "Medium", dimensions: "Waist: 24-26 inches", price: 470 },
+                                { label: "Large", dimensions: "Waist: 26-28 inches", price: 490 }
+                            ],
+                            description: "Boys uniform pants"
+                        }
+                    ],
+                    pe: [
+                        { 
+                            id: "grade1-boys-pe-shirt", 
+                            title: "Grade School Boys PE Shirt", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 350, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 22-24 inches", price: 350 },
+                                { label: "Medium", dimensions: "Chest: 24-26 inches", price: 370 },
+                                { label: "Large", dimensions: "Chest: 26-28 inches", price: 390 }
+                            ],
+                            description: "Boys PE shirt"
+                        },
+                        { 
+                            id: "grade1-boys-pe-shorts", 
+                            title: "Grade School Boys PE Shorts", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 300, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 22-24 inches", price: 300 },
+                                { label: "Medium", dimensions: "Waist: 24-26 inches", price: 320 },
+                                { label: "Large", dimensions: "Waist: 26-28 inches", price: 340 }
+                            ],
+                            description: "Boys PE shorts"
+                        }
+                    ],
+                    activity: [
+                        { 
+                            id: "grade1-boys-activity-shirt", 
+                            title: "Grade School Boys Activity Shirt", 
+                            image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 400, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 22-24 inches", price: 400 },
+                                { label: "Medium", dimensions: "Chest: 24-26 inches", price: 430 },
+                                { label: "Large", dimensions: "Chest: 26-28 inches", price: 450 }
+                            ],
+                            description: "Boys activity shirt"
+                        }
+                    ]
+                },
+                girls: {
+                    uniform: [
+                        { 
+                            id: "grade1-girls-uniform-blouse", 
+                            title: "Grade School Girls Uniform Blouse", 
+                            image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 500, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 22-24 inches", price: 500 },
+                                { label: "Medium", dimensions: "Waist: 24-26 inches", price: 530 },
+                                { label: "Large", dimensions: "Waist: 26-28 inches", price: 550 }
+                            ],
+                            description: "Girls uniform blouse with school logo"
+                        },
+                        { 
+                            id: "grade1-girls-uniform-skirt", 
+                            title: "Grade School Girls Uniform Skirt", 
+                            image: "https://images.unsplash.com/photo-1598522325074-042db73fd47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 450, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 22-24 inches", price: 450 },
+                                { label: "Medium", dimensions: "Waist: 24-26 inches", price: 470 },
+                                { label: "Large", dimensions: "Waist: 26-28 inches", price: 490 }
+                            ],
+                            description: "Girls uniform skirt"
+                        }
+                    ],
+                    pe: [
+                        { 
+                            id: "grade1-girls-pe-shirt", 
+                            title: "Grade School Girls PE Shirt", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 350, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 22-24 inches", price: 350 },
+                                { label: "Medium", dimensions: "Chest: 24-26 inches", price: 370 },
+                                { label: "Large", dimensions: "Chest: 26-28 inches", price: 390 }
+                            ],
+                            description: "Girls PE shirt"
+                        },
+                        { 
+                            id: "grade1-girls-pe-shorts", 
+                            title: "Grade School Girls PE Shorts", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 300, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 22-24 inches", price: 300 },
+                                { label: "Medium", dimensions: "Waist: 24-26 inches", price: 320 },
+                                { label: "Large", dimensions: "Waist: 26-28 inches", price: 340 }
+                            ],
+                            description: "Girls PE shorts"
+                        }
+                    ],
+                    activity: [
+                        { 
+                            id: "grade1-girls-activity-shirt", 
+                            title: "Grade School Girls Activity Shirt", 
+                            image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 400, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 22-24 inches", price: 400 },
+                                { label: "Medium", dimensions: "Chest: 24-26 inches", price: 430 },
+                                { label: "Large", dimensions: "Chest: 26-28 inches", price: 450 }
+                            ],
+                            description: "Girls activity shirt"
+                        }
+                    ]
+                }
+            },
+            grade7: {
+                boys: {
+                    uniform: [
+                        { 
+                            id: "grade7-boys-uniform-shirt", 
+                            title: "Junior High Boys Uniform Shirt", 
+                            image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 550, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 26-28 inches", price: 550 },
+                                { label: "Medium", dimensions: "Waist: 28-30 inches", price: 580 },
+                                { label: "Large", dimensions: "Waist: 30-32 inches", price: 600 }
+                            ],
+                            description: "Boys uniform shirt with school logo"
+                        },
+                        { 
+                            id: "grade7-boys-uniform-pants", 
+                            title: "Junior High Boys Uniform Pants", 
+                            image: "https://images.unsplash.com/photo-1598522325074-042db73fd47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 650, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 26-28 inches", price: 650 },
+                                { label: "Medium", dimensions: "Waist: 28-30 inches", price: 680 },
+                                { label: "Large", dimensions: "Waist: 30-32 inches", price: 700 }
+                            ],
+                            description: "Boys uniform pants"
+                        }
+                    ],
+                    pe: [
+                        { 
+                            id: "grade7-boys-pe-shirt", 
+                            title: "Junior High Boys PE Shirt", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 350, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 26-28 inches", price: 350 },
+                                { label: "Medium", dimensions: "Chest: 28-30 inches", price: 380 },
+                                { label: "Large", dimensions: "Chest: 30-32 inches", price: 400 }
+                            ],
+                            description: "Boys PE shirt"
+                        },
+                        { 
+                            id: "grade7-boys-pe-shorts", 
+                            title: "Junior High Boys PE Shorts", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 300, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 26-28 inches", price: 300 },
+                                { label: "Medium", dimensions: "Waist: 28-30 inches", price: 320 },
+                                { label: "Large", dimensions: "Waist: 30-32 inches", price: 340 }
+                            ],
+                            description: "Boys PE shorts"
+                        }
+                    ],
+                    activity: [
+                        { 
+                            id: "grade7-boys-activity-shirt", 
+                            title: "Junior High Boys Activity Shirt", 
+                            image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 400, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 26-28 inches", price: 400 },
+                                { label: "Medium", dimensions: "Chest: 28-30 inches", price: 430 },
+                                { label: "Large", dimensions: "Chest: 30-32 inches", price: 450 }
+                            ],
+                            description: "Boys activity shirt"
+                        }
+                    ]
+                },
+                girls: {
+                    uniform: [
+                        { 
+                            id: "grade7-girls-uniform-blouse", 
+                            title: "Junior High Girls Uniform Blouse", 
+                            image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 550, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 26-28 inches", price: 550 },
+                                { label: "Medium", dimensions: "Waist: 28-30 inches", price: 580 },
+                                { label: "Large", dimensions: "Waist: 30-32 inches", price: 600 }
+                            ],
+                            description: "Girls uniform blouse with school logo"
+                        },
+                        { 
+                            id: "grade7-girls-uniform-skirt", 
+                            title: "Junior High Girls Uniform Skirt", 
+                            image: "https://images.unsplash.com/photo-1598522325074-042db73fd47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 450, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 26-28 inches", price: 450 },
+                                { label: "Medium", dimensions: "Waist: 28-30 inches", price: 470 },
+                                { label: "Large", dimensions: "Waist: 30-32 inches", price: 490 }
+                            ],
+                            description: "Girls uniform skirt"
+                        }
+                    ],
+                    pe: [
+                        { 
+                            id: "grade7-girls-pe-shirt", 
+                            title: "Junior High Girls PE Shirt", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 350, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 26-28 inches", price: 350 },
+                                { label: "Medium", dimensions: "Chest: 28-30 inches", price: 380 },
+                                { label: "Large", dimensions: "Chest: 30-32 inches", price: 400 }
+                            ],
+                            description: "Girls PE shirt"
+                        },
+                        { 
+                            id: "grade7-girls-pe-shorts", 
+                            title: "Junior High Girls PE Shorts", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 300, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 26-28 inches", price: 300 },
+                                { label: "Medium", dimensions: "Waist: 28-30 inches", price: 320 },
+                                { label: "Large", dimensions: "Waist: 30-32 inches", price: 340 }
+                            ],
+                            description: "Girls PE shorts"
+                        }
+                    ],
+                    activity: [
+                        { 
+                            id: "grade7-girls-activity-shirt", 
+                            title: "Junior High Girls Activity Shirt", 
+                            image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 400, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 26-28 inches", price: 400 },
+                                { label: "Medium", dimensions: "Chest: 28-30 inches", price: 430 },
+                                { label: "Large", dimensions: "Chest: 30-32 inches", price: 450 }
+                            ],
+                            description: "Girls activity shirt"
+                        }
+                    ]
+                }
+            },
+            grade11: {
+                boys: {
+                    uniform: [
+                        { 
+                            id: "grade11-boys-uniform-shirt", 
+                            title: "Senior High Boys Uniform Shirt", 
+                            image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 600, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 28-30 inches", price: 600 },
+                                { label: "Medium", dimensions: "Waist: 30-32 inches", price: 630 },
+                                { label: "Large", dimensions: "Waist: 32-34 inches", price: 650 }
+                            ],
+                            description: "Boys uniform shirt with school logo"
+                        },
+                        { 
+                            id: "grade11-boys-uniform-pants", 
+                            title: "Senior High Boys Uniform Pants", 
+                            image: "https://images.unsplash.com/photo-1598522325074-042db73fd47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 700, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 28-30 inches", price: 700 },
+                                { label: "Medium", dimensions: "Waist: 30-32 inches", price: 730 },
+                                { label: "Large", dimensions: "Waist: 32-34 inches", price: 750 }
+                            ],
+                            description: "Boys uniform pants"
+                        }
+                    ],
+                    pe: [
+                        { 
+                            id: "grade11-boys-pe-shirt", 
+                            title: "Senior High Boys PE Shirt", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 400, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 28-30 inches", price: 400 },
+                                { label: "Medium", dimensions: "Chest: 30-32 inches", price: 430 },
+                                { label: "Large", dimensions: "Chest: 32-34 inches", price: 450 }
+                            ],
+                            description: "Boys PE shirt"
+                        },
+                        { 
+                            id: "grade11-boys-pe-shorts", 
+                            title: "Senior High Boys PE Shorts", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 350, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 28-30 inches", price: 350 },
+                                { label: "Medium", dimensions: "Waist: 30-32 inches", price: 370 },
+                                { label: "Large", dimensions: "Waist: 32-34 inches", price: 390 }
+                            ],
+                            description: "Boys PE shorts"
+                        }
+                    ],
+                    activity: [
+                        { 
+                            id: "grade11-boys-activity-shirt", 
+                            title: "Senior High Boys Activity Shirt", 
+                            image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 450, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 28-30 inches", price: 450 },
+                                { label: "Medium", dimensions: "Chest: 30-32 inches", price: 480 },
+                                { label: "Large", dimensions: "Chest: 32-34 inches", price: 500 }
+                            ],
+                            description: "Boys activity shirt"
+                        }
+                    ]
+                },
+                girls: {
+                    uniform: [
+                        { 
+                            id: "grade11-girls-uniform-blouse", 
+                            title: "Senior High Girls Uniform Blouse", 
+                            image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 600, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 28-30 inches", price: 600 },
+                                { label: "Medium", dimensions: "Waist: 30-32 inches", price: 630 },
+                                { label: "Large", dimensions: "Waist: 32-34 inches", price: 650 }
+                            ],
+                            description: "Girls uniform blouse with school logo"
+                        },
+                        { 
+                            id: "grade11-girls-uniform-skirt", 
+                            title: "Senior High Girls Uniform Skirt", 
+                            image: "https://images.unsplash.com/photo-1598522325074-042db73fd47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 500, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 28-30 inches", price: 500 },
+                                { label: "Medium", dimensions: "Waist: 30-32 inches", price: 530 },
+                                { label: "Large", dimensions: "Waist: 32-34 inches", price: 550 }
+                            ],
+                            description: "Girls uniform skirt"
+                        }
+                    ],
+                    pe: [
+                        { 
+                            id: "grade11-girls-pe-shirt", 
+                            title: "Senior High Girls PE Shirt", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 400, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 28-30 inches", price: 400 },
+                                { label: "Medium", dimensions: "Chest: 30-32 inches", price: 430 },
+                                { label: "Large", dimensions: "Chest: 32-34 inches", price: 450 }
+                            ],
+                            description: "Girls PE shirt"
+                        },
+                        { 
+                            id: "grade11-girls-pe-shorts", 
+                            title: "Senior High Girls PE Shorts", 
+                            image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 350, 
+                            sizes: [
+                                { label: "Small", dimensions: "Waist: 28-30 inches", price: 350 },
+                                { label: "Medium", dimensions: "Waist: 30-32 inches", price: 370 },
+                                { label: "Large", dimensions: "Waist: 32-34 inches", price: 390 }
+                            ],
+                            description: "Girls PE shorts"
+                        }
+                    ],
+                    activity: [
+                        { 
+                            id: "grade11-girls-activity-shirt", 
+                            title: "Senior High Girls Activity Shirt", 
+                            image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+                            price: 450, 
+                            sizes: [
+                                { label: "Small", dimensions: "Chest: 28-30 inches", price: 450 },
+                                { label: "Medium", dimensions: "Chest: 30-32 inches", price: 480 },
+                                { label: "Large", dimensions: "Chest: 32-34 inches", price: 500 }
+                            ],
+                            description: "Girls activity shirt"
+                        }
+                    ]
+                }
+            }
+        };
+
+// DOM Elements
+const uniformsTableBody = document.getElementById('uniformsTableBody');
+const addUniformBtn = document.getElementById('addUniformBtn');
+const uniformModal = document.getElementById('uniformModal');
+const deleteModal = document.getElementById('deleteModal');
+const closeModal = document.getElementById('closeModal');
+const closeDeleteModal = document.getElementById('closeDeleteModal');
+const cancelBtn = document.getElementById('cancelBtn');
+const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+const uniformForm = document.getElementById('uniformForm');
+const modalTitle = document.getElementById('modalTitle');
+const addSizeBtn = document.getElementById('addSizeBtn');
+const sizeContainer = document.getElementById('sizeContainer');
+
+// Form fields
+const uniformId = document.getElementById('uniformId');
+const uniformTitle = document.getElementById('uniformTitle');
+const uniformDescription = document.getElementById('uniformDescription');
+const uniformGrade = document.getElementById('uniformGrade');
+const uniformGender = document.getElementById('uniformGender');
+const uniformCategory = document.getElementById('uniformCategory');
+const uniformImage = document.getElementById('uniformImage');
+const uniformPrice = document.getElementById('uniformPrice');
+
+// App state
+let currentAction = 'add';
+let uniformToDelete = null;
+
+// Flatten the UNIFORMS_DATA into a single array with proper grade and gender
+let uniforms = [];
+for (const gradeLevel in UNIFORMS_DATA) {
+    for (const gender in UNIFORMS_DATA[gradeLevel]) {
+        for (const category in UNIFORMS_DATA[gradeLevel][gender]) {
+            // Add each uniform item with grade and gender properties
+            UNIFORMS_DATA[gradeLevel][gender][category].forEach(uniform => {
+                uniforms.push({
+                    ...uniform,
+                    grade: gradeLevel,
+                    gender: gender,
+                    category: category
+                });
+            });
+        }
+    }
+}
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', () => {
+    loadUniforms();
+    setupEventListeners();
+});
+
+// Load uniforms into the table
+function loadUniforms() {
+    uniformsTableBody.innerHTML = '';
+    
+    if (uniforms.length === 0) {
+        uniformsTableBody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 40px;">
+                    <i class="fas fa-tshirt" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 20px;"></i>
+                    <h3 style="color: var(--light);">No uniforms found</h3>
+                    <p>Click "Add New Uniform" to get started</p>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    uniforms.forEach(uniform => {
+        const row = document.createElement('tr');
+        
+        // Format grade for display
+        let gradeDisplay;
+        switch(uniform.grade) {
+            case 'kinder': gradeDisplay = 'Kindergarten'; break;
+            case 'grade1': gradeDisplay = 'Grade School'; break;
+            case 'grade7': gradeDisplay = 'Junior High'; break;
+            case 'grade11': gradeDisplay = 'Senior High'; break;
+            default: gradeDisplay = uniform.grade;
+        }
+        
+        // Format gender for display
+        const genderDisplay = uniform.gender === 'boys' ? 'Boys' : 'Girls';
+        
+        // Format category for display
+        let categoryDisplay;
+        switch(uniform.category) {
+            case 'uniform': categoryDisplay = 'School Uniform'; break;
+            case 'pe': categoryDisplay = 'PE Attire'; break;
+            case 'activity': categoryDisplay = 'Activity Shirt'; break;
+            default: categoryDisplay = uniform.category;
+        }
+        
+        row.innerHTML = `
+            <td>${uniform.id.substring(0, 8)}...</td>
+            <td>${uniform.title}</td>
+            <td>${categoryDisplay}</td>
+            <td>${gradeDisplay}</td>
+            <td>${genderDisplay}</td>
+            <td>₱${uniform.price}</td>
+            <td>
+                <div class="table-actions">
+                    <button class="action-btn edit-btn" data-id="${uniform.id}">
+                        <i class="fas fa-edit"></i> <span>Edit</span>
+                    </button>
+                    <button class="action-btn delete-btn" data-id="${uniform.id}">
+                        <i class="fas fa-trash"></i> <span>Delete</span>
+                    </button>
+                </div>
+            </td>
+        `;
+        
+        uniformsTableBody.appendChild(row);
+    });
+    
+    // Add event listeners to action buttons
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => editUniform(btn.dataset.id));
+    });
+    
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => confirmDelete(btn.dataset.id));
+    });
+}
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Add uniform button
+            addUniformBtn.addEventListener('click', () => {
+                currentAction = 'add';
+                modalTitle.textContent = 'Add New Uniform';
+                resetForm();
+                uniformModal.style.display = 'flex';
+            });
+            
+            // Close modal buttons
+            closeModal.addEventListener('click', () => {
+                uniformModal.style.display = 'none';
+            });
+            
+            closeDeleteModal.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+            });
+            
+            cancelBtn.addEventListener('click', () => {
+                uniformModal.style.display = 'none';
+            });
+            
+            cancelDeleteBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+            });
+            
+            // Form submission
+            uniformForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveUniform();
+            });
+            
+            // Add size button
+            addSizeBtn.addEventListener('click', addSizeInput);
+            
+            // Confirm delete
+            confirmDeleteBtn.addEventListener('click', deleteUniform);
+        }
+
+        // Reset form to empty state
+        function resetForm() {
+            uniformId.value = '';
+            uniformTitle.value = '';
+            uniformDescription.value = '';
+            uniformGrade.value = '';
+            uniformGender.value = '';
+            uniformCategory.value = '';
+            uniformImage.value = '';
+            uniformPrice.value = '';
+            sizeContainer.innerHTML = '';
+            
+            // Add one default size input
+            addSizeInput();
+        }
+
+        // Add size input fields
+        function addSizeInput(sizeData = { label: '', dimensions: '', price: '' }) {
+            const sizeDiv = document.createElement('div');
+            sizeDiv.className = 'size-item';
+            
+            sizeDiv.innerHTML = `
+                <input type="text" class="form-control size-label" placeholder="Size Label (e.g., Small)" value="${sizeData.label || ''}" required>
+                <input type="text" class="form-control size-dimensions" placeholder="Dimensions (e.g., Waist: 20-22 inches)" value="${sizeData.dimensions || ''}" required>
+                <input type="number" class="form-control size-price" placeholder="Price" min="0" step="10" value="${sizeData.price || ''}" required>
+                <button type="button" class="remove-size-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            sizeContainer.appendChild(sizeDiv);
+            
+            // Add event listener to remove button
+            sizeDiv.querySelector('.remove-size-btn').addEventListener('click', () => {
+                if (sizeContainer.children.length > 1) {
+                    sizeDiv.remove();
+                } else {
+                    alert('At least one size option is required.');
+                }
+            });
+        }
+
+        // Edit uniform
+        function editUniform(id) {
+            const uniform = uniforms.find(u => u.id === id);
+            if (!uniform) return;
+            
+            currentAction = 'edit';
+            modalTitle.textContent = 'Edit Uniform';
+            
+            // Fill form with uniform data
+            uniformId.value = uniform.id;
+            uniformTitle.value = uniform.title;
+            uniformDescription.value = uniform.description;
+            uniformGrade.value = uniform.grade;
+            uniformGender.value = uniform.gender;
+            uniformCategory.value = uniform.category;
+            uniformImage.value = uniform.image;
+            uniformPrice.value = uniform.price;
+            
+            // Clear size container and add sizes
+            sizeContainer.innerHTML = '';
+            uniform.sizes.forEach(size => {
+                addSizeInput(size);
+            });
+            
+            uniformModal.style.display = 'flex';
+        }
+
+        // Confirm delete
+        function confirmDelete(id) {
+            uniformToDelete = id;
+            deleteModal.style.display = 'flex';
+        }
+
+        // Delete uniform
+        function deleteUniform() {
+            uniforms = uniforms.filter(u => u.id !== uniformToDelete);
+            loadUniforms();
+            deleteModal.style.display = 'none';
+            showNotification('Uniform deleted successfully!', 'success');
+        }
+
+        // Save uniform (add or edit)
+        function saveUniform() {
+            // Get size data
+            const sizes = [];
+            const sizeItems = sizeContainer.querySelectorAll('.size-item');
+            
+            sizeItems.forEach(item => {
+                sizes.push({
+                    label: item.querySelector('.size-label').value,
+                    dimensions: item.querySelector('.size-dimensions').value,
+                    price: parseInt(item.querySelector('.size-price').value)
+                });
+            });
+            
+            // Create uniform object
+            const uniform = {
+                id: uniformId.value || generateId(),
+                title: uniformTitle.value,
+                description: uniformDescription.value,
+                grade: uniformGrade.value,
+                gender: uniformGender.value,
+                category: uniformCategory.value,
+                image: uniformImage.value,
+                price: parseInt(uniformPrice.value),
+                sizes: sizes
+            };
+            
+            if (currentAction === 'add') {
+                // Add new uniform
+                uniforms.push(uniform);
+                showNotification('Uniform added successfully!', 'success');
+            } else {
+                // Update existing uniform
+                const index = uniforms.findIndex(u => u.id === uniform.id);
+                if (index !== -1) {
+                    uniforms[index] = uniform;
+                    showNotification('Uniform updated successfully!', 'success');
+                }
+            }
+            
+            // Reload table and close modal
+            loadUniforms();
+            uniformModal.style.display = 'none';
+        }
+
+        // Generate a simple ID
+        function generateId() {
+            return 'uniform-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Add notification styles dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            .notification {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 8px;
+                color: white;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                transform: translateY(100px);
+                opacity: 0;
+                transition: all 0.3s ease;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+            
+            .notification.show {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            
+            .notification.success {
+                background: var(--success);
+                color: var(--dark);
+            }
+            
+            .notification.error {
+                background: var(--danger);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/Users/nuel/Desktop/VS Code/Untitled1_20250721165622.jpg">
+
+    <title>Page 1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Page1.css">
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
+<script type="text/javascript">
+   (function(){
+      emailjs.init({
+        publicKey: "7G8Fn4CCzh2k-NJ0-",
+      });
+   })();
+</script>
+<script src="Page1.js"></script>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-logo"></div>
+        <div class="loading-text">Initializing System</div>
+    </div>
+ 
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+ 
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#home" class="logo">
+    <i class="fas fa-code"></i>Blue<span>Bird...</span>
+</a>
+        <ul class="nav-links">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#loginModal" id="login-btn">Login</a></li>
+        </ul>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+ 
+            <!-- Login Modal -->
+            <div id="loginModal" class="auth-container" style="display: none;">
+                <div class="auth-card">
+                    <a href="page1.html" class="back-button">← Back</a>
+                    <h2 class="auth-title">Login</h2>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="position: relative;">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" class="form-control" required>
+                            <i class="fas fa-eye password-toggle" id="toggleLoginPassword"></i>
+                        </div>
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember-me">
+                            <label for="remember-me">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                    </form>
+                    <div class="auth-footer">
+                        <p>System access restricted to SPCC accounts</p>
+                        <p><a href="#" id="show-forgot">Forgot password?</a></p>
+                    </div>
+                </div>
+            </div>
+        
+        
+            <!-- Forgot Password Modal -->
+            <div id="forgotModal" class="auth-container" style="display: none;">
+                <div class="auth-card">
+                    <a href="page1.html" class="back-button">← Back</a>
+                    <h2 class="auth-title">Reset Password</h2>
+                    <form id="forgotForm">
+                        <div class="form-group">
+                            <label for="forgot-email">Email</label>
+                            <input type="email" id="forgot-email" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Reset Link</button>
+                    </form>
+                    <div class="auth-footer">
+                        <p>Remember your password? <a href="#" id="show-login-again">Login</a></p>
+                    </div>
+                </div>
+            </div>
+ 
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+<h1 class="hero-title"><span>📚Books Checker📘</span></h1>
+<p class="hero-subtitle">
+    <span class="typewriter">A Capstone Project for Managing,<br> 
+        Monitoring, and Updating Book Records <br>in Real-Time</span></p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary">Contact Me</a>
+                    <a href="#about" class="btn btn-secondary">About Me</a>
+                </div>
+            </div>
+        </div>
+        <div class="floating-cards">
+            <div class="card">
+                <i class="fas fa-laptop-code"></i>
+                <h3>Web Design</h3>
+                <p>Creating futuristic and responsive websites</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>Mobile Ready</h3>
+                <p>Fully optimized for all devices</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-rocket"></i>
+                <h3>Fast & Smooth</h3>
+                <p>High performance animations</p>
+            </div>
+        </div>
+    </section>
+ 
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-img-wrapper">
+                    <div class="animated-border">
+                        <img src="/Users/nuel/Desktop/VS Code/Untitled1_20250721165622.jpg" alt="Gemanuel P.">
+                    </div>
+                </div>                
+                <div class="about-text">
+<h3>About the Capstone Project</h3>
+<p><strong>Books Checker</strong> is a web-based capstone project developed by the group <strong>Fantastic Nine</strong> from SPCC Caloocan City. It is designed to help users check and monitor the availability, price, and stock status of books in a simple and user-friendly way.</p>
+
+<p>Unlike a library system, Books Checker focuses on real-time book information — showing whether a book is available, how much it costs, and if it's still in stock or sold out. This tool aims to assist both sellers and students in making quick, informed decisions about books.</p>
+
+<p>Built with modern web technologies like HTML, CSS, and JavaScript, this project reflects our team's goal to create smart and practical systems tailored for everyday use.</p>
+
+<ul class="info-list">
+<ul class="project-info">
+    <li>
+        <i class="fas fa-user"></i>
+        <span>Name:</span> BlueBird
+    </li>
+    <li>
+        <i class="fas fa-calendar-alt"></i>
+        <span>Date of Creation:</span> July 17, 2025
+    </li>
+    <li>
+        <i class="fas fa-map-marker-alt"></i>
+        <span>Location:</span> Caloocan City
+    </li>
+    <li>
+        <i class="fas fa-graduation-cap"></i>
+        <span>Course:</span> ICT Grade 12
+    </li>
+    <li>
+        <i class="fas fa-quote-left"></i>
+        <span>Quote:</span> "Coding is my weapon for the future."
+    </li>
+</ul>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>          
+                        <div class="contact-details">
+                            <h3>Location</h3>
+                            <p>Caloocan City, Philippines</p>
+                            <a href="https://www.google.com/maps/place/Systems+Plus+Computer+College/@14.6513567,120.9861665,17z/data=!4m10!1m2!2m1!1sspcc!3m6!1s0x3397b5d55299d009:0xc93c5a872b094576!8m2!3d14.6512804!4d120.989279!15sCgRzcGNjWgYiBHNwY2OSAQZzY2hvb2yaASNDaFpEU1VoTk1HOW5TMFZKUTBGblNVTkhielJtU0ZsUkVBRaoBNhABKggiBHNwY2MoADIeEAEiGkrR3cTLYMkXqFs6KCyI1_GyFVMEDUpzija_MggQAiIEc3BjY-ABAPoBBAgAEB4!16s%2Fg%2F1tdlrt7j?entry=ttu&g_ep=EgoyMDI1MDcwOS4wIKXMDSoASAFQAw%3D%3D"
+                               target="_blank"
+                               class="map-link-button">
+                                <i class="fas fa-map-marked-alt"></i> View on Google Maps
+                            </a>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Email</h3>
+                            <a href="mailto:Usergmail@example.com">Usergmail@example.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Phone</h3>
+                            <a href="tel:+639123456789">+63 0912-345-6789</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+
+<form id="contactForm">
+    <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="from_name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Your Email</label>
+        <input type="email" id="email" name="from_email" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="subject" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" class="form-control" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+</form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+<a href="#" class="footer-logo">Books<span>Checker</span></a>
+<p>Empowering libraries through real-time book monitoring and futuristic web solutions.</p>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/SPCCCaloocanOfficial" class="social-link" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.youtube.com/@spcccaloocan_official" class="social-link" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+                            <a href="https://www.instagram.com/spcccaloocan_official/" class="social-link" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.tiktok.com/@spcccaloocan_official" class="social-link" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
+                        </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#loginModal" id="footer-login">Login</a></li>
+                    </ul>
+                </div>
+
+                    <div class="footer-links">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="https://spcc.edu.ph/" target="_blank" rel="noopener noreferrer">SPCC</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li><a href="mailto:cares@spcc.edu.ph">cares@spcc.edu.ph</a></li>
+                        <li><a href="tel:+639123456789">+63 0912 345 6789 </a></li>
+                        <li><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 5:00 PM</li>
+<li>
+  <a href="https://www.google.com/maps/place/Caloocan+City+Hall/@14.6513567,120.9861665,17z/data=!4m9!1m2!2m1!1sspcc!3m5!1s0x3397b67fcca4e3df:0xb6e3063ed98ca1a8!8m2!3d14.6489906!4d120.9906299!16s%2Fg%2F11c6lhfmqk?entry=ttu&g_ep=EgoyMDI1MDcxMy4wIKXMDSoASAFQAw%3D%3D"
+     target="_blank" rel="noopener noreferrer">
+    141-143 6th Street & 10th Avenue, Caloocan, Philippines
+  </a>
+</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Books Checker | A Capstone Project for Fantastic Nine, Developed by Nuel.</p>
+            </div>
+        </div>
+    </footer>
+ 
+    <!-- Scroll Buttons -->
+    <button class="back-to-top"><i class="fas fa-arrow-up"></i></button>
+    <button class="scroll-to-bottom"><i class="fas fa-arrow-down"></i></button>
+ 
+
+
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+document.getElementById('contactForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    // Get form values
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value,
+        time: new Date().toLocaleString()
+    };
+
+    // Send email
+    emailjs.send('service_v4jou7i', 'template_700usuk', formData)
+        .then(function(response) {
+            alert('Message sent successfully!');
+            document.getElementById('contactForm').reset(); // Clear form
+        }, function(error) {
+            console.error('Failed to send email:', error);
+            alert('Failed to send message. Please try again later.');
+        });
+});
+    // LOGIN
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+
+        if (!email.endsWith('@spcc.edu.ph')) {
+            alert('Only SPCC emails are allowed.');
+            return;
+        }
+//account name anf password
+// admin acc
+        const users = [
+            { email: 'admin@spcc.edu.ph', password: 'admin123', role: 'admin' },
+            //example pass and name user
+            { email: 'galibo_gemanuel@spcc.edu.ph', password: '123456789', role: 'user' },
+            { email: 'maria@spcc.edu.ph', password: '123456', role: 'user' },
+            { email: 'guest1@spcc.edu.ph', password: 'Guest123', role: 'user' },
+            { email: 'guest2@spcc.edu.ph', password: 'Guest123', role: 'user' },
+            { email: 'guest3@spcc.edu.ph', password: 'Guest123', role: 'user' },
+            { email: 'guest4@spcc.edu.ph', password: 'Guest123', role: 'user' },
+        ];
+
+        const matchedUser = users.find(user => user.email === email && user.password === password);
+
+        if (!matchedUser) {
+            alert('Invalid credentials.');
+            return;
+        }
+
+        alert(`Welcome, ${matchedUser.role === 'admin' ? 'Admin' : 'User'}! Redirecting...`);
+        localStorage.setItem('currentUser', JSON.stringify(matchedUser));
+
+        if (matchedUser.role === 'admin') {
+            window.location.href = 'adminpage.html';
+        } else {
+            window.location.href = 'Page2.html';
+        }
+    });
+
+    // Loading Screen
+    window.addEventListener('load', function () {
+        setTimeout(function () {
+            document.querySelector('.loading-screen').classList.add('fade-out');
+            setTimeout(function () {
+                document.querySelector('.loading-screen').style.display = 'none';
+            }, 1000);
+        }, 500);
+    });
+
+    // Particles.js Config
+    particlesJS("particles-js", {
+        particles: {
+            number: { value: 80, density: { enable: true, value_area: 800 } },
+            color: { value: "#00f7ff" },
+            shape: { type: "circle" },
+            opacity: {
+                value: 0.5, random: true, anim: {
+                    enable: true, speed: 1, opacity_min: 0.1, sync: false
+                }
+            },
+            size: {
+                value: 3, random: true, anim: {
+                    enable: true, speed: 2, size_min: 0.1, sync: false
+                }
+            },
+            line_linked: {
+                enable: true, distance: 150, color: "#00f7ff", opacity: 0.4, width: 1
+            },
+            move: {
+                enable: true, speed: 1, direction: "none", random: true, out_mode: "out"
+            }
+        },
+        interactivity: {
+            events: {
+                onhover: { enable: true, mode: "grab" },
+                onclick: { enable: true, mode: "push" },
+                resize: true
+            },
+            modes: {
+                grab: { distance: 140, line_linked: { opacity: 1 } },
+                push: { particles_nb: 4 }
+            }
+        },
+        retina_detect: true
+    });
+
+    // Navbar Scroll Effect
+    window.addEventListener('scroll', function () {
+        const navbar = document.querySelector('.navbar');
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Mobile Menu Toggle
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuToggle.addEventListener('click', function () {
+        navLinks.classList.toggle('active');
+        menuToggle.innerHTML = navLinks.classList.contains('active')
+            ? '<i class="fas fa-times"></i>'
+            : '<i class="fas fa-bars"></i>';
+    });
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function () {
+            if (navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        });
+    });
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            const target = document.querySelector(targetId);
+            if (target) {
+                window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Back to Top
+    const backToTop = document.querySelector('.back-to-top');
+    window.addEventListener('scroll', () => {
+        backToTop.classList.toggle('active', window.scrollY > 300);
+    });
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Scroll to Bottom
+    const scrollBottom = document.querySelector('.scroll-to-bottom');
+    window.addEventListener('scroll', () => {
+        scrollBottom.classList.toggle('active', window.innerHeight + window.scrollY < document.body.scrollHeight - 300);
+    });
+    scrollBottom.addEventListener('click', () => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    });
+
+    // Show Login/Forgot Password
+    document.getElementById('login-btn').addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('loginModal').style.display = 'flex';
+    });
+
+    document.getElementById('show-forgot').addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('forgotModal').style.display = 'flex';
+    });
+
+    document.getElementById('show-login-again').addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('forgotModal').style.display = 'none';
+        document.getElementById('loginModal').style.display = 'flex';
+    });
+
+    // Toggle Password Visibility
+    document.getElementById('toggleLoginPassword').addEventListener('click', function () {
+        const input = document.getElementById('login-password');
+        const type = input.type === 'password' ? 'text' : 'password';
+        input.type = type;
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+</body>
+</html>
+ 
+
+

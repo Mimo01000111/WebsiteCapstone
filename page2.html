@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Viewer | SPCC Book Tracker</title>
+    <link rel="icon" type="image/png" href="/Users/nuel/Desktop/VS Code/Untitled1_20250721165622.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="page2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+    <div class="wrapper">
+<header>
+    <div class="header-content">
+        <h1>SPCC Book Tracker</h1>
+        <p class="subtitle">User Dashboard</p>
+    </div>
+    <div class="user-profile" id="userProfile">
+        <div class="user-avatar">US</div>
+        <div class="user-name">User Viewer</div>
+        <i class="fas fa-chevron-down"></i>
+
+        <div class="user-dropdown">
+            <a href="#" class="dropdown-item">
+                <i class="fas fa-user"></i> Profile
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <a href="Uniform.html" class="dropdown-item">
+                <i class="fas fa-store"></i> Next Store
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <a href="page1.html" class="dropdown-item logout">
+                <i class="fas fa-sign-out-alt"></i> Log out
+            </a>
+        </div>
+    </div>
+</header>
+
+
+        <main>
+            <!-- Summary Cards -->
+            <div class="summary-cards-container">
+                <div class="summary-card">
+                    <h3>Total Books</h3>
+                    <p id="totalBooks">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Available</h3>
+                    <p id="availableBooks">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Low Stock</h3>
+                    <p id="lowStockBooks">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Remaining</h3>
+                    <p id="remainingBooks">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Sold Books</h3>
+                    <p id="booksSold">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Sold Out</h3>
+                    <p id="soldOutBooks">0</p>
+                </div>
+            </div>
+
+            <!-- Grade Selector -->
+            <div class="grade-selector">
+                <div class="selector-container">
+                    <div class="selector-arrow" id="prevGrade">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                    
+                    <div class="grade-display">
+                        <div class="grade-levels" id="gradeLevels">
+                            <div class="grade-level active" data-grade="kindergarten"><h3>Kindergarten</h3></div>
+                            <div class="grade-level" data-grade="elementary"><h3>Elementary</h3></div>
+                            <div class="grade-level" data-grade="junior-high"><h3>Junior High</h3></div>
+                            <div class="grade-level" data-grade="senior-high"><h3>Senior High</h3></div>
+                        </div>
+                    </div>
+                    
+                    <div class="selector-arrow" id="nextGrade">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                
+                <div class="grade-buttons" id="gradeButtons">
+                    <!-- Buttons will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Book Container -->
+            <div id="book-container">
+                <!-- Books will be dynamically inserted here -->
+            </div>
+        </main>
+
+        <div class="footer">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>About SPCC</h3>
+                    <p>An easy-to-use system for tracking and managing school books for all grade levels at SPCC.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-list">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Courses</a></li>
+                        <li><a href="#">Admissions</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="Copy-Right">
+                &copy; 2025 Books Checker | A Capstone Project for Fantastic Nine, Developed by Nuel.
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="toast-content">
+            <div class="toast-title">Success</div>
+            <div class="toast-message">Data loaded successfully!</div>
+        </div>
+        <button class="toast-close">&times;</button>
+    </div>
+
+    <script>
+        // DOM Elements
+        const userProfile = document.getElementById('userProfile');
+        const prevGradeBtn = document.getElementById('prevGrade');
+        const nextGradeBtn = document.getElementById('nextGrade');
+        const gradeLevels = document.getElementById('gradeLevels');
+        const gradeButtons = document.getElementById('gradeButtons');
+        const bookContainer = document.getElementById('book-container');
+        const toast = document.getElementById('toast');
+        const toastClose = document.querySelector('.toast-close');
+
+        // Summary card elements
+        const totalBooksEl = document.getElementById('totalBooks');
+        const availableBooksEl = document.getElementById('availableBooks');
+        const lowStockBooksEl = document.getElementById('lowStockBooks');
+        const remainingBooksEl = document.getElementById('remainingBooks');
+        const booksSoldEl = document.getElementById('booksSold');
+        const soldOutBooksEl = document.getElementById('soldOutBooks');
+
+        // App state
+        let currentMajorGrade = 'kindergarten';
+        let currentGrade = 'kindergarten';
+
+        // Default books data with sample books
+        const DEFAULT_BOOKS_DATA = {
+            kindergarten: [
+                { id: "kinder-math", title: "Mathematics for Kindergarten", price: 150, remaining: 12, sold: 5, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "kinder-science", title: "Science for Kindergarten", price: 160, remaining: 8, sold: 7, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "kinder-english", title: "English for Kindergarten", price: 140, remaining: 10, sold: 5, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade1: [
+                { id: "grade1-math", title: "Mathematics for Grade 1", price: 150, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade1-science", title: "Science for Grade 1", price: 180, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade1-english", title: "English for Grade 1", price: 160, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade2: [
+                { id: "grade2-math", title: "Mathematics for Grade 2", price: 160, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade2-science", title: "Science for Grade 2", price: 190, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade2-english", title: "English for Grade 2", price: 170, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade3: [
+                { id: "grade3-math", title: "Mathematics for Grade 3", price: 170, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade3-science", title: "Science for Grade 3", price: 200, remaining: 1, sold: 14, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade3-english", title: "English for Grade 3", price: 180, remaining: 8, sold: 7, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade4: [
+                { id: "grade4-math", title: "Mathematics for Grade 4", price: 180, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade4-science", title: "Science for Grade 4", price: 210, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade4-english", title: "English for Grade 4", price: 190, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade5: [
+                { id: "grade5-math", title: "Mathematics for Grade 5", price: 190, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade5-science", title: "Science for Grade 5", price: 220, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade5-english", title: "English for Grade 5", price: 200, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade6: [
+                { id: "grade6-math", title: "Mathematics for Grade 6", price: 200, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade6-science", title: "Science for Grade 6", price: 230, remaining: 1, sold: 14, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade6-english", title: "English for Grade 6", price: 210, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade7: [
+                { id: "grade7-math", title: "Mathematics for Grade 7", price: 250, remaining: 8, sold: 7, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade7-science", title: "Science for Grade 7", price: 280, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade7-english", title: "English for Grade 7", price: 260, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade7-filipino", title: "Filipino for Grade 7", price: 240, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade7-history", title: "History for Grade 7", price: 270, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() }
+            ],
+            grade8: [
+                { id: "grade8-math", title: "Mathematics for Grade 8", price: 260, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade8-science", title: "Science for Grade 8", price: 290, remaining: 1, sold: 14, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade8-english", title: "English for Grade 8", price: 270, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade8-filipino", title: "Filipino for Grade 8", price: 250, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade8-history", title: "History for Grade 8", price: 280, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() }
+            ],
+            grade9: [
+                { id: "grade9-math", title: "Mathematics for Grade 9", price: 270, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade9-science", title: "Science for Grade 9", price: 300, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade9-english", title: "English for Grade 9", price: 280, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade9-filipino", title: "Filipino for Grade 9", price: 260, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade9-history", title: "History for Grade 9", price: 290, remaining: 1, sold: 14, stuck: true, lastUpdated: new Date().toISOString() }
+            ],
+            grade10: [
+                { id: "grade10-math", title: "Mathematics for Grade 10", price: 280, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade10-science", title: "Science for Grade 10", price: 310, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade10-english", title: "English for Grade 10", price: 290, remaining: 8, sold: 7, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade10-filipino", title: "Filipino for Grade 10", price: 270, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade10-history", title: "History for Grade 10", price: 300, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() }
+            ],
+            grade11: [
+                { id: "grade11-ict", title: "ICT Fundamentals", price: 350, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade11-humss1", title: "HUMSS Social Science", price: 320, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade11-humss2", title: "HUMSS Philosophy", price: 330, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade11-gas1", title: "GAS Core Subjects", price: 340, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade11-gas2", title: "GAS Electives", price: 360, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade11-gas3", title: "GAS Research", price: 380, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade12: [
+                { id: "grade12-ict1", title: "ICT Programming", price: 370, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade12-ict2", title: "ICT Networking", price: 390, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade12-humss1", title: "HUMSS Psychology", price: 340, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade12-humss2", title: "HUMSS Politics", price: 350, remaining: 1, sold: 14, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade12-gas1", title: "GAS Advanced Core", price: 360, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade12-gas2", title: "GAS Specialization", price: 380, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade12-gas3", title: "GAS Thesis", price: 400, remaining: 8, sold: 7, stuck: false, lastUpdated: new Date().toISOString() }
+            ]
+        };
+
+        // Load from localStorage if available, else use default
+        let booksData = JSON.parse(localStorage.getItem('spccBooksData')) || DEFAULT_BOOKS_DATA;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Initialize grade selector
+            updateGradeButtons();
+            loadBooksForGrade(currentGrade);
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // User profile dropdown
+            userProfile.addEventListener('click', () => {
+                userProfile.classList.toggle('active');
+            });
+
+            // Grade navigation arrows
+            prevGradeBtn.addEventListener('click', navigateGrades.bind(null, 'prev'));
+            nextGradeBtn.addEventListener('click', navigateGrades.bind(null, 'next'));
+
+            // Grade buttons (delegated)
+            gradeButtons.addEventListener('click', (e) => {
+                if (e.target.classList.contains('grade-btn')) {
+                    const grade = e.target.dataset.grade;
+                    selectGrade(grade);
+                }
+            });
+
+            // Toast close button
+            toastClose.addEventListener('click', () => {
+                toast.classList.remove('show');
+            });
+        }
+
+        // Navigate between major grade levels
+        function navigateGrades(direction) {
+            const grades = ['kindergarten', 'elementary', 'junior-high', 'senior-high'];
+            const currentIndex = grades.indexOf(currentMajorGrade);
+            let newIndex;
+            
+            if (direction === 'prev') {
+                newIndex = (currentIndex - 1 + grades.length) % grades.length;
+            } else {
+                newIndex = (currentIndex + 1) % grades.length;
+            }
+            
+            currentMajorGrade = grades[newIndex];
+            updateActiveGradeLevel();
+            updateGradeButtons();
+            
+            // Select the first grade in the new major level
+            const firstGrade = getFirstGradeForMajorLevel(currentMajorGrade);
+            selectGrade(firstGrade);
+        }
+
+        // Update the active grade level display
+        function updateActiveGradeLevel() {
+            const gradeLevelElements = document.querySelectorAll('.grade-level');
+            
+            gradeLevelElements.forEach(level => {
+                level.classList.remove('active');
+                if (level.dataset.grade === currentMajorGrade) {
+                    level.classList.add('active');
+                }
+            });
+        }
+
+        // Update grade buttons based on current major grade level
+        function updateGradeButtons() {
+            gradeButtons.innerHTML = '';
+            
+            let gradesToShow = [];
+            
+            switch (currentMajorGrade) {
+                case 'kindergarten':
+                    gradesToShow = ['kindergarten'];
+                    break;
+                case 'elementary':
+                    gradesToShow = ['grade1', 'grade2', 'grade3', 'grade4', 'grade5', 'grade6'];
+                    break;
+                case 'junior-high':
+                    gradesToShow = ['grade7', 'grade8', 'grade9', 'grade10'];
+                    break;
+                case 'senior-high':
+                    gradesToShow = ['grade11', 'grade12'];
+                    break;
+            }
+            
+            gradesToShow.forEach(grade => {
+                const button = document.createElement('button');
+                button.className = 'grade-btn';
+                if (grade === currentGrade) {
+                    button.classList.add('active');
+                }
+                button.dataset.grade = grade;
+                
+                // Format the button text
+                if (grade === 'kindergarten') {
+                    button.textContent = 'Kindergarten';
+                } else {
+                    const gradeNum = grade.replace('grade', '');
+                    button.textContent = `Grade ${gradeNum}`;
+                }
+                
+                gradeButtons.appendChild(button);
+            });
+            
+            // Show the buttons container
+            gradeButtons.classList.add('visible');
+        }
+
+        // Get the first grade for a major level
+        function getFirstGradeForMajorLevel(majorGrade) {
+            switch (majorGrade) {
+                case 'kindergarten': return 'kindergarten';
+                case 'elementary': return 'grade1';
+                case 'junior-high': return 'grade7';
+                case 'senior-high': return 'grade11';
+                default: return 'kindergarten';
+            }
+        }
+
+        // Select a specific grade
+        function selectGrade(grade) {
+            currentGrade = grade;
+            
+            // Update active button
+            document.querySelectorAll('.grade-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.grade === grade) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Load books for this grade
+            loadBooksForGrade(grade);
+        }
+
+        // Load books for a specific grade
+        function loadBooksForGrade(grade) {
+            bookContainer.innerHTML = '<div class="loading-spinner"></div>';
+            bookContainer.classList.add('loading');
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                bookContainer.classList.remove('loading');
+                renderBooks(booksData[grade]);
+                updateSummaryCards();
+                showToast('Data loaded successfully!');
+            }, 500);
+        }
+
+        // Render books in the container
+        function renderBooks(books) {
+            bookContainer.innerHTML = '';
+            
+            if (books.length === 0) {
+                bookContainer.innerHTML = '<p class="no-books">No books found for this grade level.</p>';
+                return;
+            }
+            
+            books.forEach((book, index) => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                bookCard.style.animationDelay = `${index * 0.1}s`;
+                
+                // Add class based on stock status
+                if (book.remaining === 0) {
+                    bookCard.classList.add('sold-out');
+                } else if (book.remaining <= 5) {
+                    bookCard.classList.add('low-stock');
+                }
+                
+                bookCard.innerHTML = `
+                    <h3>${book.title}</h3>
+                    <div class="book-info">
+                        <p>
+                            <span>Price:</span>
+                            <span>₱${book.price.toFixed(2)}</span>
+                        </p>
+                        <p>
+                            <span>Remaining:</span>
+                            <span>${book.remaining}</span>
+                        </p>
+                        <p>
+                            <span>Sold:</span>
+                            <span>${book.sold}</span>
+                        </p>
+                        <p>
+                            <span>Status:</span>
+                            <span class="status ${book.stuck ? 'off' : 'on'}">
+                                ${book.stuck ? 'Out of Stock' : 'Available'}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="timestamp">
+                        Last updated: <span>${new Date(book.lastUpdated).toLocaleString()}</span>
+                    </div>
+                `;
+                
+                bookContainer.appendChild(bookCard);
+            });
+        }
+
+        // Update summary cards
+        function updateSummaryCards() {
+            const books = booksData[currentGrade];
+            const total = books.length;
+            const available = books.filter(book => book.remaining > 0 && !book.stuck).length;
+            const lowStock = books.filter(book => book.remaining > 0 && book.remaining <= 5).length;
+            const soldOut = books.filter(book => book.remaining === 0).length;
+            const remaining = books.reduce((sum, book) => sum + book.remaining, 0);
+            const totalSold = books.reduce((sum, book) => sum + book.sold, 0);
+            
+            totalBooksEl.textContent = total;
+            availableBooksEl.textContent = available;
+            lowStockBooksEl.textContent = lowStock;
+            remainingBooksEl.textContent = remaining;
+            booksSoldEl.textContent = totalSold;
+            soldOutBooksEl.textContent = soldOut;
+        }
+
+        // Show toast notification
+        function showToast(message, isError = false) {
+            const toastContent = toast.querySelector('.toast-message');
+            const toastIcon = toast.querySelector('.toast-icon i');
+            
+            toastContent.textContent = message;
+            
+            if (isError) {
+                toast.classList.add('error');
+                toast.classList.remove('success');
+                toastIcon.className = 'fas fa-exclamation-circle';
+            } else {
+                toast.classList.add('success');
+                toast.classList.remove('error');
+                toastIcon.className = 'fas fa-check-circle';
+            }
+            
+            toast.classList.add('show');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+
+        // Close toast when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!toast.contains(e.target) && !e.target.classList.contains('edit-btn')) {
+                toast.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

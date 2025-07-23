@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | SPCC Book Tracker</title>
+    <link rel="icon" type="image/png" href="/Users/nuel/Desktop/VS Code/Untitled1_20250721165622.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/Users/nuel/Desktop/VS Code/1000000860.png">
+    <link rel="stylesheet" href="adminpage.css">
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="header-content">
+                <h1>SPCC Book Tracker</h1>
+                <p class="subtitle">Admin Dashboard</p>
+            </div>
+            <div class="admin-profile" id="adminProfile">
+                <div class="admin-avatar">AD</div>
+                <div class="admin-name">Admin User</div>
+                <i class="fas fa-chevron-down"></i>
+                <div class="admin-dropdown">
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    
+            <div class="dropdown-divider"></div>
+
+            <a href="UniformAdminDashboard.html" class="dropdown-item">
+                <i class="fas fa-briefcase"></i> Next Store
+            </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="page1.html" class="dropdown-item logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Summary Cards -->
+            <div class="summary-cards-container">
+                <div class="summary-card">
+                    <h3>Total Books</h3>
+                    <p id="totalBooks">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Available</h3>
+                    <p id="availableBooks">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Remaining</h3>
+                    <p id="RemainingBooks">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Sold Books</h3>
+                    <p id="BooksSold">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Low Stock</h3>
+                    <p id="lowStockBooks">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Sold Out</h3>
+                    <p id="soldOutBooks">0</p>
+                </div>
+            </div>
+
+            <!-- Grade Selector -->
+            <div class="grade-selector">
+                <div class="selector-container">
+                    <div class="selector-arrow" id="prevGrade">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                    
+                    <div class="grade-display">
+                        <div class="grade-levels" id="gradeLevels">
+                            <div class="grade-level active" data-grade="kindergarten"><h3>Kindergarten</h3></div>
+                            <div class="grade-level" data-grade="elementary"><h3>Elementary</h3></div>
+                            <div class="grade-level" data-grade="junior-high"><h3>Junior High</h3></div>
+                            <div class="grade-level" data-grade="senior-high"><h3>Senior High</h3></div>
+                        </div>
+                    </div>
+                    
+                    <div class="selector-arrow" id="nextGrade">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                
+                <div class="grade-buttons" id="gradeButtons">
+                    <!-- Buttons will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Add Book Button -->
+            <button class="add-book-btn" id="addBookBtn">
+                <i class="fas fa-plus"></i> Add New Book
+            </button>
+
+            <!-- Book Container -->
+            <div id="book-container">
+                <!-- Books will be dynamically inserted here -->
+            </div>
+        </main>
+
+        <div class="footer">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>About SPCC</h3>
+                    <p>St. Paul College of Communication provides quality education with a focus on communication arts and technology.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-list">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Courses</a></li>
+                        <li><a href="#">Admissions</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="Copy-Right">
+                &copy; 2025 Books Checker | A Capstone Project for Fantastic Nine, Developed by Nuel.
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Book Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-book"></i> Edit Book</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="editBookForm">
+                <input type="hidden" id="editBookId">
+                <input type="hidden" id="editBookGrade">
+                <div class="form-group">
+                    <label for="editTitle">Book Title</label>
+                    <input type="text" id="editTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPrice">Price (₱)</label>
+                    <input type="number" id="editPrice" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="editRemaining">Remaining Stock</label>
+                    <input type="number" id="editRemaining" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="editSold">Sold Count</label>
+                    <input type="number" id="editSold" min="0" required>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="editStuck">
+                    <label for="editStuck">Mark as Out of Stock</label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="delete-confirm-btn" id="deleteBookBtn">
+                        <i class="fas fa-trash"></i> Delete Book
+                    </button>
+                    <button type="button" class="cancel-btn" id="cancelEdit">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="save-btn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+            <div class="timestamp">
+                Last updated: <span id="lastUpdated">Just now</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Book Modal -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-book"></i> Add New Book</h2>
+                <button class="close-modal" id="closeAddModal">&times;</button>
+            </div>
+            <form id="addBookForm">
+                <div class="form-group">
+                    <label for="addTitle">Book Title</label>
+                    <input type="text" id="addTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="addPrice">Price (₱)</label>
+                    <input type="number" id="addPrice" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="addRemaining">Initial Stock</label>
+                    <input type="number" id="addRemaining" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="addGrade">Grade Level</label>
+                    <select id="addGrade" required>
+                        <option value="">Select Grade Level</option>
+                        <option value="kindergarten">Kindergarten</option>
+                        <option value="grade1">Grade 1</option>
+                        <option value="grade2">Grade 2</option>
+                        <option value="grade3">Grade 3</option>
+                        <option value="grade4">Grade 4</option>
+                        <option value="grade5">Grade 5</option>
+                        <option value="grade6">Grade 6</option>
+                        <option value="grade7">Grade 7</option>
+                        <option value="grade8">Grade 8</option>
+                        <option value="grade9">Grade 9</option>
+                        <option value="grade10">Grade 10</option>
+                        <option value="grade11">Grade 11</option>
+                        <option value="grade12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" id="cancelAdd">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="save-btn">
+                        <i class="fas fa-plus"></i> Add Book
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="confirmation-modal" id="deleteModal">
+        <div class="confirmation-content">
+            <div class="confirmation-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="confirmation-title">Confirm Deletion</h3>
+            <p class="confirmation-message">Are you sure you want to delete this book? This action cannot be undone.</p>
+            <div class="confirmation-actions">
+                <button class="cancel-btn" id="cancelDelete">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="delete-confirm-btn" id="confirmDelete">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="toast-content">
+            <div class="toast-title">Success</div>
+            <div class="toast-message">Book updated successfully!</div>
+        </div>
+        <button class="toast-close">&times;</button>
+    </div>
+
+    <script>
+        // DOM Elements
+        const adminProfile = document.getElementById('adminProfile');
+        const prevGradeBtn = document.getElementById('prevGrade');
+        const nextGradeBtn = document.getElementById('nextGrade');
+        const gradeLevels = document.getElementById('gradeLevels');
+        const gradeButtons = document.getElementById('gradeButtons');
+        const bookContainer = document.getElementById('book-container');
+        const editModal = document.getElementById('editModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const cancelEditBtn = document.getElementById('cancelEdit');
+        const editBookForm = document.getElementById('editBookForm');
+        const toast = document.getElementById('toast');
+        const toastClose = document.querySelector('.toast-close');
+        const addBookBtn = document.getElementById('addBookBtn');
+        const addModal = document.getElementById('addModal');
+        const closeAddModalBtn = document.getElementById('closeAddModal');
+        const cancelAddBtn = document.getElementById('cancelAdd');
+        const addBookForm = document.getElementById('addBookForm');
+        const deleteModal = document.getElementById('deleteModal');
+        const deleteBookBtn = document.getElementById('deleteBookBtn');
+        const cancelDeleteBtn = document.getElementById('cancelDelete');
+        const confirmDeleteBtn = document.getElementById('confirmDelete');
+
+        // Summary card elements
+        const totalBooksEl = document.getElementById('totalBooks');
+        const availableBooksEl = document.getElementById('availableBooks');
+        const lowStockBooksEl = document.getElementById('lowStockBooks');
+        const remainingBooksEl = document.getElementById('RemainingBooks');
+        const booksSoldEl = document.getElementById('BooksSold');
+        const soldOutBooksEl = document.getElementById('soldOutBooks');
+
+        // Form elements
+        const editBookId = document.getElementById('editBookId');
+        const editBookGrade = document.getElementById('editBookGrade');
+        const editTitle = document.getElementById('editTitle');
+        const editPrice = document.getElementById('editPrice');
+        const editRemaining = document.getElementById('editRemaining');
+        const editSold = document.getElementById('editSold');
+        const editStuck = document.getElementById('editStuck');
+        const lastUpdated = document.getElementById('lastUpdated');
+        const addTitle = document.getElementById('addTitle');
+        const addPrice = document.getElementById('addPrice');
+        const addRemaining = document.getElementById('addRemaining');
+        const addGrade = document.getElementById('addGrade');
+
+        // App state
+        let currentMajorGrade = 'kindergarten';
+        let currentGrade = 'kindergarten';
+        let bookToDelete = null;
+
+        // Default books data with sample books
+        const DEFAULT_BOOKS_DATA = {
+            kindergarten: [
+                { id: "kinder-math", title: "Numbers and Shapes", price: 150, remaining: 12, sold: 5, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "kinder-science", title: "Discovering Nature", price: 160, remaining: 8, sold: 7, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "kinder-english", title: "Alphabet Adventures", price: 140, remaining: 10, sold: 5, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade1: [
+                { id: "grade1-math", title: "Fun with Numbers", price: 150, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade1-science", title: "Living Things Around Us", price: 180, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade1-english", title: "Reading and Rhymes", price: 160, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade2: [
+                { id: "grade2-math", title: "Numbers and Patterns", price: 160, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade2-science", title: "Exploring Matter", price: 190, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade2-english", title: "Stories and Sentences", price: 170, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade3: [
+                { id: "grade3-math", title: "Math Challenges", price: 170, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade3-science", title: "Plants and Animals", price: 200, remaining: 1, sold: 14, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade3-english", title: "Language Lab", price: 180, remaining: 8, sold: 7, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade4: [
+                { id: "grade4-math", title: "Problem Solving Skills", price: 180, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade4-science", title: "Energy and Forces", price: 210, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade4-english", title: "Grammar & Composition", price: 190, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade5: [
+                { id: "grade5-math", title: "Advanced Math Concepts", price: 190, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade5-science", title: "Earth and Space", price: 220, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade5-english", title: "Writing with Purpose", price: 200, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade6: [
+                { id: "grade6-math", title: "Math in Daily Life", price: 200, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade6-science", title: "Scientific Inquiry", price: 230, remaining: 1, sold: 14, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade6-english", title: "Exploring Literature", price: 210, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade7: [
+                { id: "grade7-math", title: "Algebra Essentials", price: 250, remaining: 8, sold: 7, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade7-science", title: "Physics Foundations", price: 280, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade7-english", title: "World of Words", price: 260, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade7-filipino", title: "Wikang Filipino", price: 240, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade7-history", title: "Philippine History", price: 270, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() }
+            ],
+            grade8: [
+                { id: "grade8-math", title: "Geometry and Graphs", price: 260, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade8-science", title: "Biology Basics", price: 290, remaining: 1, sold: 14, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade8-english", title: "Creative Expression", price: 270, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade8-filipino", title: "Panitikang Pilipino", price: 250, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade8-history", title: "Asian Civilizations", price: 280, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() }
+            ],
+            grade9: [
+                { id: "grade9-math", title: "Functions and Equations", price: 270, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade9-science", title: "Chemistry in Action", price: 300, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade9-english", title: "Classic Literature", price: 280, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade9-filipino", title: "Kulturang Pilipino", price: 260, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade9-history", title: "World History", price: 290, remaining: 1, sold: 14, stuck: true, lastUpdated: new Date().toISOString() }
+            ],
+            grade10: [
+                { id: "grade10-math", title: "Advanced Algebra", price: 280, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade10-science", title: "Integrated Science", price: 310, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade10-english", title: "Language and Media", price: 290, remaining: 8, sold: 7, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade10-filipino", title: "Mga Babasahing Pilipino", price: 270, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade10-history", title: "Contemporary Issues", price: 300, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() }
+            ],
+            grade11: [
+                { id: "grade11-ict", title: "Digital Technologies", price: 350, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade11-humss1", title: "Sociological Perspectives", price: 320, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade11-humss2", title: "Introduction to Philosophy", price: 330, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade11-gas1", title: "Understanding Culture & Society", price: 340, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade11-gas2", title: "Practical Research 1", price: 360, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade11-gas3", title: "21st Century Literature", price: 380, remaining: 7, sold: 8, stuck: false, lastUpdated: new Date().toISOString() }
+            ],
+            grade12: [
+                { id: "grade12-ict1", title: "Web Development Basics", price: 370, remaining: 3, sold: 12, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade12-ict2", title: "Network Administration", price: 390, remaining: 5, sold: 10, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade12-humss1", title: "Developmental Psychology", price: 340, remaining: 4, sold: 11, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade12-humss2", title: "Political Science Foundations", price: 350, remaining: 1, sold: 14, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade12-gas1", title: "Advanced Social Studies", price: 360, remaining: 6, sold: 9, stuck: false, lastUpdated: new Date().toISOString() },
+                { id: "grade12-gas2", title: "Special Topics in Humanities", price: 380, remaining: 2, sold: 13, stuck: true, lastUpdated: new Date().toISOString() },
+                { id: "grade12-gas3", title: "Senior High Thesis", price: 400, remaining: 8, sold: 7, stuck: false, lastUpdated: new Date().toISOString() }
+            ]
+        };
+
+        // Load from localStorage if available, else use default
+        let booksData = JSON.parse(localStorage.getItem('spccBooksData')) || DEFAULT_BOOKS_DATA;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Optional: Save to localStorage if it's first time
+            if (!localStorage.getItem('spccBooksData')) {
+                localStorage.setItem('spccBooksData', JSON.stringify(booksData));
+            }
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Initialize grade selector
+            updateGradeButtons();
+            loadBooksForGrade(currentGrade);
+        });
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('spccBooksData', JSON.stringify(booksData));
+            console.log('Data saved to localStorage');
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Admin profile dropdown
+            adminProfile.addEventListener('click', () => {
+                adminProfile.classList.toggle('active');
+            });
+
+            // Grade navigation arrows
+            prevGradeBtn.addEventListener('click', navigateGrades.bind(null, 'prev'));
+            nextGradeBtn.addEventListener('click', navigateGrades.bind(null, 'next'));
+
+            // Grade buttons (delegated)
+            gradeButtons.addEventListener('click', (e) => {
+                if (e.target.classList.contains('grade-btn')) {
+                    const grade = e.target.dataset.grade;
+                    selectGrade(grade);
+                }
+            });
+
+            // Modal controls
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelEditBtn.addEventListener('click', closeModal);
+            
+            // Form submission
+            editBookForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveBookChanges();
+            });
+
+            // Add book button
+            addBookBtn.addEventListener('click', openAddModal);
+            closeAddModalBtn.addEventListener('click', closeAddModal);
+            cancelAddBtn.addEventListener('click', closeAddModal);
+            addBookForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                addNewBook();
+            });
+
+            // Delete book controls
+            deleteBookBtn.addEventListener('click', () => {
+                const bookId = editBookId.value;
+                const grade = editBookGrade.value;
+                const book = booksData[grade].find(b => b.id === bookId);
+                if (book) {
+                    bookToDelete = { id: bookId, grade };
+                    openDeleteModal(book.title);
+                }
+            });
+            
+            cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+            confirmDeleteBtn.addEventListener('click', confirmDeleteBook);
+
+            // Toast close button
+            toastClose.addEventListener('click', () => {
+                toast.classList.remove('show');
+            });
+        }
+
+        // Navigate between major grade levels
+        function navigateGrades(direction) {
+            const grades = ['kindergarten', 'elementary', 'junior-high', 'senior-high'];
+            const currentIndex = grades.indexOf(currentMajorGrade);
+            let newIndex;
+            
+            if (direction === 'prev') {
+                newIndex = (currentIndex - 1 + grades.length) % grades.length;
+            } else {
+                newIndex = (currentIndex + 1) % grades.length;
+            }
+            
+            currentMajorGrade = grades[newIndex];
+            updateActiveGradeLevel();
+            updateGradeButtons();
+            
+            // Select the first grade in the new major level
+            const firstGrade = getFirstGradeForMajorLevel(currentMajorGrade);
+            selectGrade(firstGrade);
+        }
+
+        // Update the active grade level display
+        function updateActiveGradeLevel() {
+            const gradeLevelElements = document.querySelectorAll('.grade-level');
+            
+            gradeLevelElements.forEach(level => {
+                level.classList.remove('active');
+                if (level.dataset.grade === currentMajorGrade) {
+                    level.classList.add('active');
+                }
+            });
+        }
+
+        // Update grade buttons based on current major grade level
+        function updateGradeButtons() {
+            gradeButtons.innerHTML = '';
+            
+            let gradesToShow = [];
+            
+            switch (currentMajorGrade) {
+                case 'kindergarten':
+                    gradesToShow = ['kindergarten'];
+                    break;
+                case 'elementary':
+                    gradesToShow = ['grade1', 'grade2', 'grade3', 'grade4', 'grade5', 'grade6'];
+                    break;
+                case 'junior-high':
+                    gradesToShow = ['grade7', 'grade8', 'grade9', 'grade10'];
+                    break;
+                case 'senior-high':
+                    gradesToShow = ['grade11', 'grade12'];
+                    break;
+            }
+            
+            gradesToShow.forEach(grade => {
+                const button = document.createElement('button');
+                button.className = 'grade-btn';
+                if (grade === currentGrade) {
+                    button.classList.add('active');
+                }
+                button.dataset.grade = grade;
+                
+                // Format the button text
+                if (grade === 'kindergarten') {
+                    button.textContent = 'Kindergarten';
+                } else {
+                    const gradeNum = grade.replace('grade', '');
+                    button.textContent = `Grade ${gradeNum}`;
+                }
+                
+                gradeButtons.appendChild(button);
+            });
+            
+            // Show the buttons container
+            gradeButtons.classList.add('visible');
+        }
+
+        // Get the first grade for a major level
+        function getFirstGradeForMajorLevel(majorGrade) {
+            switch (majorGrade) {
+                case 'kindergarten': return 'kindergarten';
+                case 'elementary': return 'grade1';
+                case 'junior-high': return 'grade7';
+                case 'senior-high': return 'grade11';
+                default: return 'kindergarten';
+            }
+        }
+
+        // Select a specific grade
+        function selectGrade(grade) {
+            currentGrade = grade;
+            
+            // Update active button
+            document.querySelectorAll('.grade-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.grade === grade) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Load books for this grade
+            loadBooksForGrade(grade);
+        }
+
+        // Load books for a specific grade
+        function loadBooksForGrade(grade) {
+            bookContainer.innerHTML = '<div class="loading-spinner"></div>';
+            bookContainer.classList.add('loading');
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                bookContainer.classList.remove('loading');
+                renderBooks(booksData[grade]);
+                updateSummaryCards();
+            }, 500);
+        }
+
+        // Render books in the container
+        function renderBooks(books) {
+            bookContainer.innerHTML = '';
+            
+            if (books.length === 0) {
+                bookContainer.innerHTML = '<p class="no-books">No books found for this grade level.</p>';
+                return;
+            }
+            
+            books.forEach((book, index) => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                bookCard.style.animationDelay = `${index * 0.1}s`;
+                
+                // Add class based on stock status
+                if (book.remaining === 0) {
+                    bookCard.classList.add('sold-out');
+                } else if (book.remaining <= 5) {
+                    bookCard.classList.add('low-stock');
+                }
+                
+                bookCard.innerHTML = `
+                    <h3>${book.title}</h3>
+                    <div class="book-info">
+                        <p>
+                            <span>Price:</span>
+                            <span>₱${book.price.toFixed(2)}</span>
+                        </p>
+                        <p>
+                            <span>Remaining:</span>
+                            <span>${book.remaining}</span>
+                        </p>
+                        <p>
+                            <span>Sold:</span>
+                            <span>${book.sold}</span>
+                        </p>
+                        <p>
+                            <span>Status:</span>
+                            <span class="status ${book.stuck ? 'off' : 'on'}">
+                                ${book.stuck ? 'Out of Stock' : 'Available'}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="actions">
+                        <label class="switch">
+                            <input type="checkbox" ${book.stuck ? 'checked' : ''}>
+                            <span class="slider"></span>
+                        </label>
+                        <button class="edit-btn" data-id="${book.id}">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="delete-btn" data-id="${book.id}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                
+                bookContainer.appendChild(bookCard);
+                
+                // Set up toggle switch event
+                const toggle = bookCard.querySelector('.switch input');
+                toggle.addEventListener('change', () => {
+                    book.stuck = toggle.checked;
+                    saveData();
+                    updateSummaryCards();
+                    
+                    // Update the status display
+                    const statusEl = bookCard.querySelector('.status');
+                    statusEl.className = `status ${book.stuck ? 'off' : 'on'}`;
+                    statusEl.textContent = book.stuck ? 'Out of Stock' : 'Available';
+                    
+                    showToast('Book status updated!');
+                });
+                
+                // Set up edit button event
+                const editBtn = bookCard.querySelector('.edit-btn');
+                editBtn.addEventListener('click', () => {
+                    openEditModal(book);
+                });
+
+                // Set up delete button event
+                const deleteBtn = bookCard.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', () => {
+                    bookToDelete = { id: book.id, grade: currentGrade };
+                    openDeleteModal(book.title);
+                });
+            });
+        }
+
+        // Open edit modal with book data
+        function openEditModal(book) {
+            editBookId.value = book.id;
+            editBookGrade.value = currentGrade;
+            editTitle.value = book.title;
+            editPrice.value = book.price;
+            editRemaining.value = book.remaining;
+            editSold.value = book.sold;
+            editStuck.checked = book.stuck;
+            
+            // Format last updated date
+            const updatedDate = new Date(book.lastUpdated);
+            lastUpdated.textContent = updatedDate.toLocaleString();
+            
+            editModal.classList.add('show');
+        }
+
+        // Close the edit modal
+        function closeModal() {
+            editModal.classList.remove('show');
+        }
+
+        // Open add modal
+        function openAddModal() {
+            addTitle.value = '';
+            addPrice.value = '';
+            addRemaining.value = '';
+            addGrade.value = currentGrade;
+            addModal.classList.add('show');
+        }
+
+        // Close the add modal
+        function closeAddModal() {
+            addModal.classList.remove('show');
+        }
+
+        // Open delete confirmation modal
+        function openDeleteModal(bookTitle) {
+            const confirmationMessage = document.querySelector('.confirmation-message');
+            confirmationMessage.textContent = `Are you sure you want to delete "${bookTitle}"? This action cannot be undone.`;
+            deleteModal.classList.add('show');
+        }
+
+        // Close the delete confirmation modal
+        function closeDeleteModal() {
+            deleteModal.classList.remove('show');
+        }
+
+        // Save book changes from the modal
+        function saveBookChanges() {
+            const bookId = editBookId.value;
+            const grade = editBookGrade.value;
+            
+            // Find the book in our data
+            const bookIndex = booksData[grade].findIndex(book => book.id === bookId);
+            
+            if (bookIndex !== -1) {
+                const book = booksData[grade][bookIndex];
+                
+                // Update book data
+                book.title = editTitle.value;
+                book.price = parseFloat(editPrice.value);
+                book.remaining = parseInt(editRemaining.value);
+                book.sold = parseInt(editSold.value);
+                book.stuck = editStuck.checked;
+                book.lastUpdated = new Date().toISOString();
+                
+                // Save to localStorage
+                saveData();
+                
+                // Reload books to reflect changes
+                loadBooksForGrade(grade);
+                
+                // Close modal and show toast
+                closeModal();
+                showToast('Book updated successfully!');
+            }
+        }
+
+        // Add a new book
+        function addNewBook() {
+            const title = addTitle.value.trim();
+            const price = parseFloat(addPrice.value);
+            const remaining = parseInt(addRemaining.value);
+            const grade = addGrade.value;
+            
+            if (!title || isNaN(price) || isNaN(remaining)) {
+                showToast('Please fill all fields correctly', true);
+                return;
+            }
+            
+            // Generate a unique ID for the new book
+            const newId = `${grade}-${title.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
+            
+            const newBook = {
+                id: newId,
+                title: title,
+                price: price,
+                remaining: remaining,
+                sold: 0,
+                stuck: false,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            // Add the new book to the data
+            if (!booksData[grade]) {
+                booksData[grade] = [];
+            }
+            booksData[grade].push(newBook);
+            
+            // Save to localStorage
+            saveData();
+            
+            // Close modal and show toast
+            closeAddModal();
+            showToast('Book added successfully!');
+            
+            // If we're on the same grade, reload the books
+            if (grade === currentGrade) {
+                loadBooksForGrade(grade);
+            }
+        }
+
+        // Confirm and delete a book
+        function confirmDeleteBook() {
+            if (!bookToDelete) return;
+            
+            const { id, grade } = bookToDelete;
+            
+            // Find the book in our data
+            const bookIndex = booksData[grade].findIndex(book => book.id === id);
+            
+            if (bookIndex !== -1) {
+                // Remove the book
+                booksData[grade].splice(bookIndex, 1);
+                
+                // Save to localStorage
+                saveData();
+                
+                // Close modals
+                closeDeleteModal();
+                closeModal();
+                
+                // Show toast
+                showToast('Book deleted successfully!');
+                
+                // Reload books to reflect changes
+                loadBooksForGrade(grade);
+            }
+            
+            bookToDelete = null;
+        }
+
+        // Update summary cards
+        function updateSummaryCards() {
+            const books = booksData[currentGrade] || [];
+            const total = books.length;
+            const available = books.filter(book => book.remaining > 0 && !book.stuck).length;
+            const lowStock = books.filter(book => book.remaining > 0 && book.remaining <= 5).length;
+            const soldOut = books.filter(book => book.remaining === 0).length;
+            const remaining = books.reduce((sum, book) => sum + book.remaining, 0);
+            const totalSold = books.reduce((sum, book) => sum + book.sold, 0);
+            
+            totalBooksEl.textContent = total;
+            availableBooksEl.textContent = available;
+            lowStockBooksEl.textContent = lowStock;
+            remainingBooksEl.textContent = remaining;
+            booksSoldEl.textContent = totalSold;
+            soldOutBooksEl.textContent = soldOut;
+        }
+
+        // Show toast notification
+        function showToast(message, isError = false) {
+            const toastTitle = toast.querySelector('.toast-title');
+            const toastContent = toast.querySelector('.toast-message');
+            const toastIcon = toast.querySelector('.toast-icon i');
+            
+            toastTitle.textContent = isError ? 'Error' : 'Success';
+            toastContent.textContent = message;
+            
+            if (isError) {
+                toast.classList.add('error');
+                toast.classList.remove('success');
+                toastIcon.className = 'fas fa-exclamation-circle';
+            } else {
+                toast.classList.add('success');
+                toast.classList.remove('error');
+                toastIcon.className = 'fas fa-check-circle';
+            }
+            
+            toast.classList.add('show');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+
+        // Close toast when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!toast.contains(e.target) && !e.target.classList.contains('edit-btn')) {
+                toast.classList.remove('show');
+            }
+        });
+
+        // Close modal when clicking outside
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                closeModal();
+            }
+        });
+
+        // Close add modal when clicking outside
+        addModal.addEventListener('click', (e) => {
+            if (e.target === addModal) {
+                closeAddModal();
+            }
+        });
+
+        // Close delete modal when clicking outside
+        deleteModal.addEventListener('click', (e) => {
+            if (e.target === deleteModal) {
+                closeDeleteModal();
+            }
+        });
+    </script>
+</body>
+</html>
